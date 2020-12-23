@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         textView7.setOnClickListener(this)  //7
         textView11.setOnClickListener(this) //8
         textView12.setOnClickListener(this) //9
+
     }
 
     override fun onClick(v: View?) {
