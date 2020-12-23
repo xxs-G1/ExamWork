@@ -108,16 +108,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         //判断应该撤销运算符还是数字
         if (numsList.size > operatorList.size){
             //撤销数字
-            numsList.removeLast()
-            isNumStart = true
-            currentInputNumStringBuilder.clear()
+            if (numsList.size > 0){
+                numsList.removeLast()
+                isNumStart = true
+                currentInputNumStringBuilder.clear()
+            }
         }else{
             //撤销运算符
-            operatorList.removeLast()
-            isNumStart = false
-            currentInputNumStringBuilder.append(numsList.last())
+            if (operatorList.size > 0){
+                operatorList.removeLast()
+                isNumStart = false
+                if (numsList.size > 0){
+                    currentInputNumStringBuilder.append(numsList.last())
+                }
+            }
         }
         showUI()
+        calculate()
     }
 
     //等于键
@@ -145,7 +152,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (numsList.size > 0){
             var i = 0   //记录运算符数组遍历的下标
             var param1 = numsList[0].toFloat()  //记录第一个运算符==数字数组的第一个数
-            var param2 = 0
+            var param2 = 0.0f
             if (operatorList.size > 0){
                 while (true){
                     //获取i对应的运算符
@@ -154,12 +161,43 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     if (operator == "x" || operator == "÷"){
                         //乘除直接运算，找到第二个运算数
                         if (i+1 < numsList.size){
-                            param2 = numsList[i+1]
+                            param2 = numsList[i+1].toFloat()
                             //运算
                             param1 = realCalculate(param1,operator,param2)
                         }
                     }else{
                         //加减运算，判断下一个运算符是不是乘除
+                        if (i == operatorList.size-1 || (operatorList[i+1] != "x" && operatorList[i+1] != "÷")){
+                            //可以直接运算
+                            if (i < numsList.size - 1){
+                                param2 = numsList[i+1].toFloat()
+                                param1 = realCalculate(param1,operator,param2)
+                            }
+                        }else{
+                            //后面有而且是乘或除
+                            var j = i+1
+                            var mparam1 = numsList[j].toFloat()
+                            var mparam2 = 0.0f
+                            while (true){
+                                //获取j对应的运算符
+                                if (operatorList[j] == "x" || operatorList[j] == "÷"){
+                                    if (j < operatorList.size-1){
+                                        mparam2 = numsList[j+1].toFloat()
+                                        mparam1 = realCalculate(mparam1,operatorList[j],mparam2)
+                                    }
+                                }else{
+                                    //之前那个运算符后面所有连续的乘除都运算结束
+                                    break
+                                }
+                                j++
+                                if (j == operatorList.size){
+                                    break
+                                }
+                            }
+                            param2 = mparam1
+                            param1 = realCalculate(param1,operator,param2)
+                            i = j - 1
+                        }
                     }
 
                     i++
@@ -171,6 +209,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             //显示对应结果
             result_textview.text = String.format("%.1f",param1)
+        }else{
+            result_textview.text = "0"
         }
     }
 
@@ -178,7 +218,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun realCalculate(
         param1:Float,
         operator:String,
-        param2:Int):Float{
+        param2:Float):Float{
         var result:Float = 0.0f
         when(operator){
             "+" -> {
