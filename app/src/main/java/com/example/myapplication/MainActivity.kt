@@ -1,253 +1,159 @@
 package com.example.myapplication
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
+import android.text.TextUtils
 import android.view.View
-import android.widget.TextView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.System.exit
 
 @ExperimentalStdlibApi
-class MainActivity : AppCompatActivity(), View.OnClickListener {
-
-    private val currentInputNumStringBuilder = StringBuilder()
-    private val numsList = mutableListOf<Int>()
-    private val operatorList = mutableListOf<String>()
-    private var isNumStart = true
-    private var lastDot = false
-    var lastNum = false
+class MainActivity : AppCompatActivity(){
+    private var btn_register: Button? = null //注册按钮
+    private var btn_login: Button? = null    //登录按钮
+    //用户名，密码，再次输入的密码的控件
+    private var user: EditText? = null
+    private var password: EditText? = null
+    private var password2: EditText? = null
+    //用户名，密码，再次输入的密码的控件的获取值
+    private var userName: String? = null
+    private var psw: String? = null
+    private var pswAgain: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //清空按钮
-        textView3.setOnClickListener{
-            clearButtonClicked(it)
-        }
-        //返回按钮
-        imageView2.setOnClickListener {
-            backButtonClicked(it)
-        }
-        //除法
-        textView6.setOnClickListener {
-            operatorButtonClicked(it)
-        }
-        //乘法
-        textView21.setOnClickListener {
-            operatorButtonClicked(it)
-        }
-        //加法
-        textView22.setOnClickListener {
-            operatorButtonClicked(it)
-        }
-        //减法
-        textView23.setOnClickListener {
-            operatorButtonClicked(it)
-        }
-        //取余
-        textView5.setOnClickListener {
-            operatorButtonClicked(it)
-        }
-
-        textView17.setOnClickListener(this) //0
-        textView10.setOnClickListener(this) //1
-        textView15.setOnClickListener(this) //2
-        textView16.setOnClickListener(this) //3
-        textView9.setOnClickListener(this)  //4
-        textView13.setOnClickListener(this) //5
-        textView14.setOnClickListener(this) //6
-        textView7.setOnClickListener(this)  //7
-        textView11.setOnClickListener(this) //8
-        textView12.setOnClickListener(this) //9
-
-        textView18.setOnClickListener {
-            exit(0)
+        //设置此界面为竖屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        init()
+        button.setOnClickListener{
+            val intent = Intent(this,PutongActivity::class.java)
+            startActivity(intent)
         }
     }
 
-    override fun onClick(v: View?) {
-        numberButtonClicked(v!!)
+    private fun init(){
+        btn_register = findViewById(R.id.register)
+        btn_login = findViewById(R.id.login)
+        user = findViewById(R.id.user)
+        password = findViewById(R.id.password)
+        password2 = findViewById(R.id.repassword)
+
+        btn_register!!.setOnClickListener(View.OnClickListener {
+            getEditString() //获取输入在相应控件的字符串
+            //判断输入框内容
+            if (TextUtils.isEmpty(userName)){
+                Toast.makeText(this,"请输入用户账号", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else if (TextUtils.isEmpty(psw)){
+                Toast.makeText(this,"请输入密码", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else if (TextUtils.isEmpty(pswAgain)){
+                Toast.makeText(this,"请再次输入密码", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else if (psw != pswAgain){
+                Toast.makeText(this,"两次输入密码不一致", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else if (isExistUserName(userName)){
+                Toast.makeText(this,"此用户已经存在", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else{
+                Toast.makeText(this,"注册成功", Toast.LENGTH_SHORT).show()
+                saveRegisterInfo(userName,psw)
+                val intent = Intent()
+                intent.putExtra("userName",userName)
+                setResult(Activity.RESULT_OK,intent)
+                this.finish()
+            }
+        })
+
+        btn_login!!.setOnClickListener(View.OnClickListener {
+            userName = user!!.getText().toString().trim()
+            psw = password!!.getText().toString().trim()
+            val md5Psw = MD5Utils.md5(psw!!)
+            pswAgain = readPsw(userName)
+            if (TextUtils.isEmpty(userName)){
+                Toast.makeText(this,"请输入用户账号", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else if (TextUtils.isEmpty(psw)){
+                Toast.makeText(this,"请输入密码", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else if (md5Psw == pswAgain){
+                Toast.makeText(this,"登录成功", Toast.LENGTH_SHORT).show()
+                saveLoginStatus(true,userName)
+                val intent = Intent()
+                intent.putExtra("isLogin",true)
+                setResult(Activity.RESULT_OK,intent)
+                this.finish()
+                startActivity(Intent(this,SuperActivity::class.java))
+                return@OnClickListener
+            }else if (pswAgain != null && !TextUtils.isEmpty(pswAgain) && md5Psw != pswAgain){
+                Toast.makeText(this,"输入的用户账号和密码不一致", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }else{
+                Toast.makeText(this,"该用户不存在", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
-    //数字键
-    fun numberButtonClicked(view:View){
-        val tv = view as TextView   //将view强制转换为TextView
+    private fun getEditString() {
+        userName = user!!.text.toString().trim { it <= ' ' }
+        psw = password!!.text.toString().trim { it <= ' ' }
+        pswAgain = password2!!.text.toString().trim { it <= ' ' }
+    }
 
-        currentInputNumStringBuilder.append(tv.text)
-        if (isNumStart == true){
-            //当前输入的是一个新的数字，添加到数组中
-            currentInputNumStringBuilder.append(tv.text)
-            numsList.add(tv.text.toString().toInt())
-            //更改状态，已经不是一个新数字的开始
-            isNumStart = false
-        }else{
-            //用当前的数字去替换数组中最后一个元素
-            numsList[numsList.size-1] = currentInputNumStringBuilder.toString().toInt()
-//            numsList.removeLast()
-//            numsList.add(currentInputNumStringBuilder.toString().toInt())
+    private fun isExistUserName(userName: String?): Boolean {
+        var has_userName = false
+        //mode_private SharedPreferences sp = getSharedPreferences( );
+        // "loginInfo", MODE_PRIVATE
+        val sp = getSharedPreferences("loginInfo", MODE_PRIVATE)
+        //获取密码
+        val spPsw = sp.getString(userName, "")//传入用户名获取密码
+        //如果密码不为空则确实保存过这个用户名
+        if (!TextUtils.isEmpty(spPsw)) {
+            has_userName = true
         }
-        //显示内容
-        showUI()
-        calculate()
+        return has_userName
     }
 
-    //运算符键
-    fun operatorButtonClicked(view:View){
-        val tv = view as TextView   //将view强制转换为TextView
-        operatorList.add(tv.text.toString())    //保存当前运算符
-        isNumStart = true   //改变状态
-        currentInputNumStringBuilder.clear()
-
-        //显示内容
-        showUI()
+    private fun saveRegisterInfo(userName: String?, psw: String?) {
+        val md5Psw = psw?.let { MD5Utils.md5(it) }//把密码用MD5加密
+        //loginInfo表示文件名, mode_prgivate SharedPreferences sp = getSharedPreferences( );
+        val sp = getSharedPreferences("loginInfo", MODE_PRIVATE)
+        //获取编辑器， SharedPreferences.Editor  editor -> sp.edit();
+        val editor = sp.edit()
+        //以用户名为key，密码为value保存在SharedPreferences中
+        //key,value,如键值对，editor.putString(用户名，密码）;
+        editor.putString(userName, md5Psw)
+        //提交修改 editor.commit();
+        editor.commit()
     }
 
-    //清空键
-    fun clearButtonClicked(view:View) {
-        process_textview.text = ""
-        result_textview.text = "0"
-        currentInputNumStringBuilder.clear()
-        numsList.clear()
-        operatorList.clear()
-        isNumStart = true
+    private fun readPsw(userName: String?): String? {   //根据用户账号读密码
+        val sp = getSharedPreferences("loginInfo", Context.MODE_PRIVATE)
+        return sp.getString(userName,"")
     }
 
-    //撤销键
-    fun backButtonClicked(view:View){
-        //判断应该撤销运算符还是数字
-        if (numsList.size > operatorList.size){
-            //撤销数字
-            if (numsList.size > 0){
-                numsList.removeLast()
-                isNumStart = true
-                currentInputNumStringBuilder.clear()
-            }
-        }else{
-            //撤销运算符
-            if (operatorList.size > 0){
-                operatorList.removeLast()
-                isNumStart = false
-                if (numsList.size > 0){
-                    currentInputNumStringBuilder.append(numsList.last())
-                }
-            }
+    private fun saveLoginStatus(status:Boolean,userName: String?){
+        val sp = getSharedPreferences("loginInfo", Context.MODE_PRIVATE)
+        val editor = sp.edit()  //获取编辑器
+        editor.putBoolean("isLogin",status) //存入boolean类型的登录状态
+        editor.putString("loginUserName",userName)  //存入登录状态时的用户名
+        editor.commit() //提交修改
+    }
+
+    protected override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent?){
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null){
+            user!!.setText(userName)
+            userName?.length?.let { user!!.setSelection(it) }
         }
-        showUI()
-        calculate()
-    }
-
-    //等于键
-    fun equalButtonClicked(view:View){
-        Log.d("myTag","equal")
-    }
-
-    //拼接当前运算的表达式，显示到界面上
-    private fun showUI(){
-        val str = StringBuilder()
-        for ((i,num) in numsList.withIndex()){
-            //将当前的数字拼接上去
-            str.append(num)
-            //判断运算符数组中对应位置是否有内容
-            if (operatorList.size > i){
-                //将i对应的运算符拼接到字符串中
-                str.append("${operatorList[i]}")
-            }
-        }
-        process_textview.text = str.toString()
-    }
-
-    //实现逻辑运算功能
-    private fun calculate(){
-        if (numsList.size > 0){
-            var i = 0   //记录运算符数组遍历的下标
-            var param1 = numsList[0].toFloat()  //记录第一个运算符==数字数组的第一个数
-            var param2 = 0.0f
-            if (operatorList.size > 0){
-                while (true){
-                    //获取i对应的运算符
-                    var operator = operatorList[i]
-                    //判断是否为乘除
-                    if (operator == "x" || operator == "÷" || operator == "%"){
-                        //乘除直接运算，找到第二个运算数
-                        if (i+1 < numsList.size){
-                            param2 = numsList[i+1].toFloat()
-                            //运算
-                            param1 = realCalculate(param1,operator,param2)
-                        }
-                    }else{
-                        //加减运算，判断下一个运算符是不是乘除
-                        if (i == operatorList.size-1 || (operatorList[i+1] != "x" && operatorList[i+1] != "÷" && operatorList[i+1] != "%")){
-                            //可以直接运算
-                            if (i < numsList.size - 1){
-                                param2 = numsList[i+1].toFloat()
-                                param1 = realCalculate(param1,operator,param2)
-                            }
-                        }else{
-                            //后面有而且是乘或除
-                            var j = i+1
-                            var mparam1 = numsList[j].toFloat()
-                            var mparam2 = 0.0f
-                            while (true){
-                                //获取j对应的运算符
-                                if (operatorList[j] == "x" || operatorList[j] == "÷" || operatorList[j] == "%"){
-                                    if (j < operatorList.size-1){
-                                        mparam2 = numsList[j+1].toFloat()
-                                        mparam1 = realCalculate(mparam1,operatorList[j],mparam2)
-                                    }
-                                }else{
-                                    //之前那个运算符后面所有连续的乘除都运算结束
-                                    break
-                                }
-                                j++
-                                if (j == operatorList.size){
-                                    break
-                                }
-                            }
-                            param2 = mparam1
-                            param1 = realCalculate(param1,operator,param2)
-                            i = j - 1
-                        }
-                    }
-
-                    i++
-                    if (i == operatorList.size){
-                        //遍历结束
-                        break
-                    }
-                }
-            }
-            //显示对应结果
-            result_textview.text = String.format("%.1f",param1)
-        }else{
-            result_textview.text = "0"
-        }
-    }
-
-    //运算
-    private fun realCalculate(
-        param1:Float,
-        operator:String,
-        param2:Float):Float{
-        var result:Float = 0.0f
-        when(operator){
-            "+" -> {
-                result = param1 + param2
-            }
-            "-" -> {
-                result = param1 - param2
-            }
-            "x" -> {
-                result = param1 * param2
-            }
-            "÷" -> {
-                result = param1 / param2
-            }
-            "%" -> {
-                result = param1 % param2
-            }
-        }
-        return result
     }
 }
+

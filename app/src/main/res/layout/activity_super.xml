@@ -1,0 +1,249 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F3FAAE">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="进制转换器"
+        android:textColor="#FF9800"
+        android:textSize="35sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="输入数据:"
+        android:textSize="30sp"
+        android:textColor="#99CCAA"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_1"
+            android:layout_width="125dp"
+            android:layout_height="35dp"
+            android:text="进制类型:"
+            android:textSize="25sp"
+            android:textColor="#000"
+            />
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="240dp"
+            android:layout_height="35dp"
+            android:textSize="30sp"
+            />
+    </LinearLayout>
+    <EditText
+        android:id="@+id/et_shuru"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></EditText>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="输出数据:"
+        android:textSize="30sp"
+        android:textColor="#99CCAA"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_2"
+            android:layout_width="125dp"
+            android:layout_height="35dp"
+            android:text="进制类型:"
+            android:textSize="25sp"
+            android:textColor="#000"
+            />
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="240dp"
+            android:layout_height="35dp"
+            android:textSize="30sp"
+            />
+    </LinearLayout>
+    <EditText
+        android:id="@+id/et_shuchu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></EditText>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="0"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="1"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="2"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="3"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="4"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="5"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="6"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="7"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="8" />
+        <Button
+            android:id="@+id/btn_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="9" />
+        <Button
+            android:id="@+id/btn_A"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="A" />
+        <Button
+            android:id="@+id/btn_B"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="B" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_C"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="C" />
+        <Button
+            android:id="@+id/btn_D"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="D" />
+        <Button
+            android:id="@+id/btn_E"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="E" />
+        <Button
+            android:id="@+id/btn_F"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"
+            android:text="F" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_CE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:text="CE"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_js"
+            android:text="计算"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_shape"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_putong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="普通计算器"
+        android:textSize="30sp"
+        android:background="@drawable/round_shape"/>
+</LinearLayout>
