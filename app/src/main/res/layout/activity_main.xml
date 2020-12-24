@@ -35,21 +35,6 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_shape"
-        android:gravity="center"
-        android:text="AC"
-        android:textColor="#2AECBE"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
-
-    <TextView
         android:id="@+id/process_textview"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -256,7 +241,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/round_shape"
         android:gravity="center"
-        android:text="."
+        android:text="ESC"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -273,8 +258,7 @@
         android:textColor="#D74B51"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/textView8"
-        app:layout_constraintStart_toStartOf="@+id/textView8"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="@+id/textView12" />
 
     <TextView

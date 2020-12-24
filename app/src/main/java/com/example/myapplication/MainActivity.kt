@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.System.exit
 
 @ExperimentalStdlibApi
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -14,6 +15,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val numsList = mutableListOf<Int>()
     private val operatorList = mutableListOf<String>()
     private var isNumStart = true
+    private var lastDot = false
+    var lastNum = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         textView23.setOnClickListener {
             operatorButtonClicked(it)
         }
+        //取余
+        textView5.setOnClickListener {
+            operatorButtonClicked(it)
+        }
 
         textView17.setOnClickListener(this) //0
         textView10.setOnClickListener(this) //1
@@ -55,6 +62,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         textView11.setOnClickListener(this) //8
         textView12.setOnClickListener(this) //9
 
+        textView18.setOnClickListener {
+            exit(0)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -159,7 +169,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     //获取i对应的运算符
                     var operator = operatorList[i]
                     //判断是否为乘除
-                    if (operator == "x" || operator == "÷"){
+                    if (operator == "x" || operator == "÷" || operator == "%"){
                         //乘除直接运算，找到第二个运算数
                         if (i+1 < numsList.size){
                             param2 = numsList[i+1].toFloat()
@@ -168,7 +178,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }else{
                         //加减运算，判断下一个运算符是不是乘除
-                        if (i == operatorList.size-1 || (operatorList[i+1] != "x" && operatorList[i+1] != "÷")){
+                        if (i == operatorList.size-1 || (operatorList[i+1] != "x" && operatorList[i+1] != "÷" && operatorList[i+1] != "%")){
                             //可以直接运算
                             if (i < numsList.size - 1){
                                 param2 = numsList[i+1].toFloat()
@@ -181,7 +191,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             var mparam2 = 0.0f
                             while (true){
                                 //获取j对应的运算符
-                                if (operatorList[j] == "x" || operatorList[j] == "÷"){
+                                if (operatorList[j] == "x" || operatorList[j] == "÷" || operatorList[j] == "%"){
                                     if (j < operatorList.size-1){
                                         mparam2 = numsList[j+1].toFloat()
                                         mparam1 = realCalculate(mparam1,operatorList[j],mparam2)
@@ -233,6 +243,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             "÷" -> {
                 result = param1 / param2
+            }
+            "%" -> {
+                result = param1 % param2
             }
         }
         return result
