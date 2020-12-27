@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.media.SoundPool
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -25,6 +26,10 @@ class MainActivity : AppCompatActivity(){
     private var userName: String? = null
     private var psw: String? = null
     private var pswAgain: String? = null
+
+    private var soundPool:SoundPool? = null
+    private var soundId:Int? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
